@@ -33,7 +33,7 @@ work that way.
 
 ## Who is using Lisbeth?
 Lisbeth arose from the browsergame "Schlacht um Kyoto"
-(engl.: "Battle for Kyoto) at http://www.schlacht-um-kyoto.de in order
+(engl.: "Battle for Kyoto") at http://www.schlacht-um-kyoto.de in order
 to improve performance with a data structure that should work as simple
 as possible with automated caching.
 
