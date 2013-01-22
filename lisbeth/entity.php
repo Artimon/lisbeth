@@ -231,7 +231,7 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 		$memcache = $this->memcache();
 		$memcache->delete($this->cacheKey);
 
-		$this->data = array();
+		$this->data = null;
 	}
 
 	/**
