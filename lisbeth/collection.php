@@ -272,6 +272,8 @@ abstract class Lisbeth_Collection
 		if (!isset($this->data[$entityId])) {
 			$this->data[$entityId] = $entityId;
 			$this->memcache()->replace($this->cacheKey, $this->data);
+
+			$this->reload();
 		}
 	}
 
@@ -287,7 +289,14 @@ abstract class Lisbeth_Collection
 		if (isset($this->data[$entityId])) {
 			unset($this->data[$entityId]);
 			$this->memcache()->replace($this->cacheKey, $this->data);
+
+			$this->reload();
 		}
+	}
+
+	protected function reload() {
+		$this->entities = null;
+		$this->entities();
 	}
 
 	/**
