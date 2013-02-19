@@ -127,6 +127,47 @@ class Lisbeth_Database {
 	}
 
 	/**
+	 * Return all query results at once.
+	 *
+	 * @return array
+	 */
+	public function fetchAll() {
+		$result = array();
+
+		while ($data = $this->fetch()) {
+			$result[] = $data;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Return an array containing the content of a single column.
+	 *
+	 * @return array
+	 */
+	public function fetchColumn() {
+		$result = array();
+
+		while ($data = $this->fetch()) {
+			$result[] = current($data);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Return the content of a single selected field.
+	 *
+	 * @return mixed
+	 */
+	public function fetchOne() {
+		$data = $this->fetch();
+
+		return current($data);
+	}
+
+	/**
 	 * Return mysql num rows.
 	 *
 	 * @return int
