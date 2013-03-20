@@ -49,4 +49,8 @@ class Lisbeth_ObjectPool {
 	public static function set($instance, $className, $parameter = null) {
 		self::$instances[$className][$parameter] = $instance;
 	}
+
+	public static function clear() {
+		self::$instances = array();
+	}
 }
