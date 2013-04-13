@@ -164,7 +164,7 @@ class Lisbeth_Database {
 	public function fetchOne() {
 		$data = $this->fetch();
 
-		return current($data);
+		return $data ? current($data) : null;
 	}
 
 	/**
