@@ -82,6 +82,50 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 	}
 
 	/**
+	 * Creates a blank entity, to load by other criteria for example.
+	 *
+	 * Example:
+	 * Entity::blank()->by('name', 'username');
+	 *
+	 * @return Lisbeth_Entity
+	 */
+	public static function blank() {
+		return new static(0, false);
+	}
+
+	/**
+	 * Note:
+	 * Does not fulfill the conditions to be a static function.
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @return null|Lisbeth_Entity
+	 */
+	public function by($key, $value) {
+		$key = mysql_real_escape_string($key);
+
+		$sql = "
+			SELECT
+				`{$this->primary}` AS `primary`
+			FROM
+				`{$this->table}`
+			WHERE
+				`{$key}` = {$this->sanitize($value)};";
+
+		$database = new Lisbeth_Database();
+		$database->query($sql);
+
+		$result = $database->fetch();
+		$database->freeResult();
+
+		if ($result) {
+			return new static($result['primary']);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Initialize data entity.
 	 *
 	 * @param int $id
@@ -179,10 +223,7 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 
 		$update = array();
 		foreach ($this->changedData as $index => $isNumeric) {
-			$value = $this->data[$index];
-			$value = $isNumeric ? (float)$value : "'".mysql_real_escape_string($value)."'";
-
-			$update[] = "`{$index}` = {$value}";
+			$update[] = "`{$index}` = {$this->sanitize($this->data[$index])}";
 		}
 
 		$sql = "
@@ -287,11 +328,11 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 	 *
 	 * @param string $index
 	 * @param int|string $value
-	 * @param bool $setOnly
+	 * @param bool $noUpdate
 	 * @throws InvalidArgumentException
 	 * @return Lisbeth_Entity
 	 */
-	public function setValue($index, $value, $setOnly = false) {
+	public function setValue($index, $value, $noUpdate = false) {
 		if (!array_key_exists($index, $this->data)) {
 			throw new InvalidArgumentException("Set value ['{$index}'] for entity '".get_class($this)."({$this->id})' not found.");
 		}
@@ -299,8 +340,8 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 		if ($value != $this->data[$index]) {
 			$this->data[$index] = $value;
 
-			if (!$setOnly) {
-				$this->changedData[$index] = is_numeric($value);
+			if (!$noUpdate) {
+				$this->changedData[$index] = true;
 			}
 		}
 
@@ -338,5 +379,15 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 	 */
 	public function inject($index, $value) {
 		$this->data[$index] = $value;
+	}
+
+	/**
+	 * @param mixed $value
+	 * @return float|string
+	 */
+	public function sanitize($value) {
+		return is_numeric($value)
+			? (float)$value
+			: "'".mysql_real_escape_string($value)."'";
 	}
 }
