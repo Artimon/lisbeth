@@ -35,6 +35,31 @@ class Lisbeth_Database {
 	private $queries = 0;
 
 	/**
+	 * @param string $host
+	 * @param string $user
+	 * @param string $password
+	 * @return resource
+	 */
+	public function connect($host, $user, $password) {
+		return mysql_connect($host, $user, $password);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function close() {
+		return mysql_close();
+	}
+
+	/**
+	 * @param string $database
+	 * @return bool
+	 */
+	public function selectDatabase($database) {
+		return mysql_select_db($database);
+	}
+
+	/**
 	 * @param callback $errorHandler
 	 */
 	public function setErrorHandler($errorHandler) {
