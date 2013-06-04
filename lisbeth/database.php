@@ -99,6 +99,20 @@ class Lisbeth_Database {
 	}
 
 	/**
+	 * Adds inserted data to given entity collection.
+	 *
+	 * @param Lisbeth_Collection $collection
+	 * @return Lisbeth_Database
+	 */
+	public function addTo(Lisbeth_Collection $collection) {
+		$collection->addEntity(
+			$this->insertId()
+		);
+
+		return $this;
+	}
+
+	/**
 	 * Return the current error state.
 	 *
 	 * @return bool true on error
@@ -118,6 +132,13 @@ class Lisbeth_Database {
 		}
 
 		return 'No error occurred.';
+	}
+
+	/**
+	 * @return int
+	 */
+	public function insertId() {
+		return mysql_insert_id();
 	}
 
 	/**
