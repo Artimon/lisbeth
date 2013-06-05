@@ -31,6 +31,18 @@ class Lisbeth_ObjectPool {
 	}
 
 	/**
+	 * @param $className
+	 * @return array
+	 */
+	public static function classes($className) {
+		if (array_key_exists($className, self::$instances)) {
+			return self::$instances[$className];
+		}
+
+		return array();
+	}
+
+	/**
 	 * @static
 	 * @param string $className
 	 * @param int $parameter
