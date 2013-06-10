@@ -1,5 +1,8 @@
 <?php
 
+class Lisbeth_FixtureEntityExposedOne extends Lisbeth_Entity { }
+class Lisbeth_FixtureEntityExposedTwo extends Lisbeth_Entity { }
+
 class Lisbeth_EntityTest extends PHPUnit_Framework_TestCase {
 	private $sut;
 	private $database;
@@ -70,6 +73,31 @@ class Lisbeth_EntityTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(
 			null,
 			$this->sut->load()
+		);
+	}
+
+	/**
+	 * @dataProvider getDataForCacheKey
+	 */
+	public function testCacheKey($entity, $expectedResult) {
+		/** @var Lisbeth_Entity $entity */
+		$cacheKey = $entity->cacheKey();
+
+		$this->assertEquals($expectedResult, $cacheKey);
+	}
+
+	public function getDataForCacheKey() {
+		Lisbeth_KeyGenerator::setCacheSpace('test_db');
+
+		return array(
+			array(
+				new Lisbeth_FixtureEntityExposedOne(0, false),
+				'space_1116790561_Lisbeth_FixtureEntityExposedOne_0'
+			),
+			array(
+				new Lisbeth_FixtureEntityExposedTwo(8, false),
+				'space_1116790561_Lisbeth_FixtureEntityExposedTwo_8'
+			)
 		);
 	}
 

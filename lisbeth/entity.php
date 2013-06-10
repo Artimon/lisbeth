@@ -25,13 +25,6 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 	protected $noCache = false;
 
 	/**
-	 * Default for unit testing.
-	 *
-	 * @var string entity cache key index
-	 */
-	protected $cacheIndex = 'globals';
-
-	/**
 	 * @var string cache key
 	 */
 	private $cacheKey;
@@ -132,7 +125,10 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 	 */
 	public function init($id) {
 		$this->id = (int)$id;
-		$this->cacheKey = $this->keyGenerator()->createKey(__CLASS__, $this->id);
+		$this->cacheKey = $this->keyGenerator()->createKey(
+			get_called_class(),
+			$this->id
+		);
 	}
 
 	/**

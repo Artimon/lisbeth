@@ -1,6 +1,10 @@
 <?php
 
+class Lisbeth_EntityExposed extends Lisbeth_Entity { }
+
 class Lisbeth_CollectionExposed extends Lisbeth_Collection {
+	protected $entityName = 'Lisbeth_EntityExposed';
+
 	public function setEntity($index, $entity) {
 		$this->entities[$index] = $entity;
 	}
