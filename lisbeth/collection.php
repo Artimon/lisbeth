@@ -218,10 +218,12 @@ abstract class Lisbeth_Collection
 			$primary = current($this->entities)->primary();
 
 			foreach ($allData as $entityData) {
-				$id = $entityData[$primary];
-				$this->entities[$id]->injectData($entityData);
+				if (!empty($entityData)) {
+					$id = $entityData[$primary];
+					$this->entities[$id]->injectData($entityData);
 
-				unset($ids[$id]);
+					unset($ids[$id]);
+				}
 			}
 		}
 
