@@ -45,6 +45,13 @@ class Lisbeth_Database {
 	}
 
 	/**
+	 * @return Lisbeth_Statement
+	 */
+	public function newStatement() {
+		return new Lisbeth_Statement($this);
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function close() {
@@ -242,5 +249,15 @@ class Lisbeth_Database {
 	 */
 	public function escape($value) {
 		return mysql_real_escape_string($value);
+	}
+
+	/**
+	 * @param float|int|string $value
+	 * @return float|string
+	 */
+	public function sanitize($value) {
+		return is_numeric($value)
+			? (float)$value
+			: $this->escape($value);
 	}
 }

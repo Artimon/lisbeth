@@ -3,6 +3,7 @@
 $basePath = __DIR__;
 require_once $basePath . '/lisbeth/distributor.php';
 require_once $basePath . '/lisbeth/database.php';
+require_once $basePath . '/lisbeth/statement.php';
 require_once $basePath . '/lisbeth/keygenerator.php';
 require_once $basePath . '/lisbeth/collection.php';
 require_once $basePath . '/lisbeth/entity.php';
