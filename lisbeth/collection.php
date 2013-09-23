@@ -76,8 +76,11 @@ abstract class Lisbeth_Collection
 	 * @param int $id
 	 */
 	public function init($id) {
-		$this->id		= (int)$id;
-		$this->cacheKey	= $this->keyGenerator()->createKey(__CLASS__, $this->id);
+		$this->id = (int)$id;
+		$this->cacheKey = $this->keyGenerator()->createKey(
+			get_called_class(),
+			$this->id
+		);
 	}
 
 	/**
