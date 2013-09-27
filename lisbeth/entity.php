@@ -3,7 +3,10 @@
 /**
  * Provides data entity functionality.
  */
-abstract class Lisbeth_Entity extends Lisbeth_Distributor {
+abstract class Lisbeth_Entity
+	extends Lisbeth_Distributor
+	implements Lisbeth_IEntity {
+
 	/**
 	 * @var string database table name
 	 */
@@ -25,16 +28,6 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 	protected $noCache = false;
 
 	/**
-	 * @var string cache key
-	 */
-	private $cacheKey;
-
-	/**
-	 * @var int primary key value
-	 */
-	private $id;
-
-	/**
 	 * @var bool
 	 */
 	private $valid = false;
@@ -51,8 +44,6 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 
 
 	/**
-	 * Constructor
-	 *
 	 * @param int $id
 	 * @param bool $load
 	 */
@@ -62,16 +53,6 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 		if ($load) {
 			$this->load();
 		}
-	}
-
-	/**
-	 * @param int $id
-	 * @return Lisbeth_Entity
-	 */
-	public static function getInstance($id) {
-		$className = get_called_class();
-
-		return Lisbeth_ObjectPool::get($className, $id);
 	}
 
 	/**
@@ -103,7 +84,7 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 			FROM
 				`{$this->table}`
 			WHERE
-				`{$key}` = {$this->sanitize($value)};";
+				`{$key}` = {$this->quote($value)};";
 
 		$database = new Lisbeth_Database();
 		$database->query($sql);
@@ -116,26 +97,6 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 		}
 
 		return $this;
-	}
-
-	/**
-	 * Initialize data entity.
-	 *
-	 * @param int $id
-	 */
-	public function init($id) {
-		$this->id = (int)$id;
-		$this->cacheKey = $this->keyGenerator()->createKey(
-			get_called_class(),
-			$this->id
-		);
-	}
-
-	/**
-	 * @return string
-	 */
-	public function cacheKey() {
-		return $this->cacheKey;
 	}
 
 	/**
@@ -193,9 +154,9 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 	}
 
 	/**
-	 * Enable post data manipulation.
+	 * Enable post data manipulation by overriding this method.
 	 */
-	public function postProcess(&$data) {
+	protected function postProcess(&$data) {
 		return;
 	}
 
@@ -219,7 +180,7 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 
 		$update = array();
 		foreach ($this->changedData as $index => $isNumeric) {
-			$update[] = "`{$index}` = {$this->sanitize($this->data[$index])}";
+			$update[] = "`{$index}` = {$this->quote($this->data[$index])}";
 		}
 
 		$sql = "
@@ -245,10 +206,6 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 		$this->changedData = array();
 
 		return true;
-	}
-
-	public function clearCache() {
-		$this->memcache()->delete($this->cacheKey);
 	}
 
 	/**
@@ -282,13 +239,6 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 	}
 
 	/**
-	 * @return int
-	 */
-	public function id() {
-		return $this->id;
-	}
-
-	/**
 	 * @deprecated Use self::data() instead.
 	 */
 	public function getData() {
@@ -312,7 +262,7 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 	 * @return	string
 	 * @throws	InvalidArgumentException
 	 */
-	public function value($index) {
+	public function get($index) {
 		if (is_array($this->data) && array_key_exists($index, $this->data)) {
 			return $this->data[$index];
 		}
@@ -329,7 +279,7 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 	 * @throws InvalidArgumentException
 	 * @return Lisbeth_Entity
 	 */
-	public function setValue($index, $value, $noUpdate = false) {
+	public function set($index, $value, $noUpdate = false) {
 		if (!array_key_exists($index, $this->data)) {
 			throw new InvalidArgumentException("Set value ['{$index}'] for entity '".get_class($this)."({$this->id})' not found.");
 		}
@@ -351,9 +301,9 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 	 * @return Lisbeth_Entity
 	 */
 	public function increment($index, $value) {
-		$this->setValue(
+		$this->set(
 			$index,
-			$this->value($index) + $value
+			$this->get($index) + $value
 		);
 
 		return $this;
@@ -382,9 +332,9 @@ abstract class Lisbeth_Entity extends Lisbeth_Distributor {
 	 * @param mixed $value
 	 * @return float|string
 	 */
-	public function sanitize($value) {
-		return is_numeric($value)
-			? (float)$value
-			: "'".mysql_real_escape_string($value)."'";
+	public function quote($value) {
+		$value = $this->database()->sanitize($value);
+
+		return is_numeric($value) ? $value : "'{$value}'";
 	}
 }

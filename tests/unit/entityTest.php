@@ -101,7 +101,7 @@ class Lisbeth_EntityTest extends PHPUnit_Framework_TestCase {
 		);
 	}
 
-	public function testSetValueValueUpdate() {
+	public function testSetGetUpdate() {
 		$this->assertFalse(
 			$this->sut->update()
 		);
@@ -115,11 +115,11 @@ class Lisbeth_EntityTest extends PHPUnit_Framework_TestCase {
 			->will($this->returnValue($testData));
 
 		$this->sut->load();
-		$this->sut->setValue('index', 'newValue');
+		$this->sut->set('index', 'newValue');
 
 		$this->assertEquals(
 			'newValue',
-			$this->sut->value('index')
+			$this->sut->get('index')
 		);
 
 		$this->assertTrue(
@@ -154,7 +154,7 @@ class Lisbeth_EntityTest extends PHPUnit_Framework_TestCase {
 		);
 
 		// Third time set same value as it was, no changes to update.
-		$this->sut->setValue('index', 'newValue');
+		$this->sut->set('index', 'newValue');
 
 		$this->assertFalse(
 			$this->sut->update()
@@ -165,7 +165,7 @@ class Lisbeth_EntityTest extends PHPUnit_Framework_TestCase {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testSetDataInvalid() {
-		$this->sut->setValue('test', 1);
+		$this->sut->set('test', 1);
 	}
 
 	/**
@@ -180,6 +180,6 @@ class Lisbeth_EntityTest extends PHPUnit_Framework_TestCase {
 			$this->sut->getData()
 		);
 
-		$this->sut->value('test');
+		$this->sut->get('test');
 	}
 }

@@ -5,7 +5,7 @@
  */
 abstract class Lisbeth_Collection
 	extends Lisbeth_Distributor
-	implements Iterator {
+	implements Lisbeth_ICollection, Iterator {
 
 	/**
 	 * @var string database table name
@@ -40,16 +40,6 @@ abstract class Lisbeth_Collection
 	protected $cacheIndex = 'globals';
 
 	/**
-	 * @var string cache key
-	 */
-	private $cacheKey;
-
-	/**
-	 * @var int primary key value
-	 */
-	private $id;
-
-	/**
 	 * @var array of entityId => entityId
 	 */
 	protected $data = array();
@@ -61,33 +51,11 @@ abstract class Lisbeth_Collection
 
 
 	/**
-	 * Constructor
-	 *
 	 * @param int $id
 	 */
 	public function __construct($id) {
 		$this->init($id);
 		$this->load();
-	}
-
-	/**
-	 * Initialize entity collection.
-	 *
-	 * @param int $id
-	 */
-	public function init($id) {
-		$this->id = (int)$id;
-		$this->cacheKey = $this->keyGenerator()->createKey(
-			get_called_class(),
-			$this->id
-		);
-	}
-
-	/**
-	 * @return int
-	 */
-	public function id() {
-		return $this->id;
 	}
 
 	/**
@@ -259,7 +227,7 @@ abstract class Lisbeth_Collection
 	}
 
 	/**
-	 * @return array
+	 * @return int[]
 	 */
 	public function entityIds() {
 		return $this->data;
@@ -316,7 +284,7 @@ abstract class Lisbeth_Collection
 		}
 
 		$entity
-			->setValue($this->group, $collection->id())
+			->set($this->group, $collection->id())
 			->update();
 
 		$this->removeEntity($entityId);
@@ -351,6 +319,9 @@ abstract class Lisbeth_Collection
 	}
 
 	/**
+	 * Note:
+	 * Iterator method, do not confuse with entity validation.
+	 *
 	 * @return bool
 	 */
 	public function valid() {

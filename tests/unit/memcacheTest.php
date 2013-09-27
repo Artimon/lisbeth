@@ -10,16 +10,16 @@ class memcacheTest extends PHPUnit_Framework_TestCase {
 		$this->memcache = $this->getMock('Memcache');
 	}
 
-	public function testGetInstance() {
+	public function testGetSingleton() {
 		$this->assertInstanceOf(
 			'Lisbeth_Memcache',
-			Lisbeth_Memcache::getInstance()
+			Lisbeth_Memcache::getSingleton()
 		);
 	}
 
 	public function testIsConnected() {
 		$this->assertFalse(
-			Lisbeth_Memcache::getInstance()->isConnected()
+			Lisbeth_Memcache::getSingleton()->isConnected()
 		);
 	}
 }

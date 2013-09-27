@@ -35,7 +35,7 @@ class Lisbeth_Memcache {
 	/**
 	 * @return Lisbeth_Memcache
 	 */
-	public static function getInstance() {
+	public static function getSingleton() {
 		return Lisbeth_ObjectPool::get('Lisbeth_Memcache');
 	}
 

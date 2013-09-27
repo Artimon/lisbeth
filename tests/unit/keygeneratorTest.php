@@ -1,13 +1,13 @@
 <?php
 
 class Lisbeth_KeyGeneratorTest extends PHPUnit_Framework_TestCase {
-	public function testGetInstance() {
+	public function testGetSingleton() {
 		Lisbeth_KeyGenerator::setCacheSpace('database1');
-		$sut1 = Lisbeth_KeyGenerator::getInstance();
-		$sut2 = Lisbeth_KeyGenerator::getInstance();
+		$sut1 = Lisbeth_KeyGenerator::getSingleton();
+		$sut2 = Lisbeth_KeyGenerator::getSingleton();
 
 		Lisbeth_KeyGenerator::setCacheSpace('database2');
-		$sut3 = Lisbeth_KeyGenerator::getInstance();
+		$sut3 = Lisbeth_KeyGenerator::getSingleton();
 
 		$this->assertSame($sut1, $sut2);
 		$this->assertNotSame($sut1, $sut3);
@@ -15,7 +15,7 @@ class Lisbeth_KeyGeneratorTest extends PHPUnit_Framework_TestCase {
 
 	public function testCreateKey() {
 		Lisbeth_KeyGenerator::setCacheSpace('database');
-		$sut = Lisbeth_KeyGenerator::getInstance();
+		$sut = Lisbeth_KeyGenerator::getSingleton();
 
 		$result = $sut->createKey('table');
 		$this->assertEquals(

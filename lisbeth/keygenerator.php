@@ -16,9 +16,13 @@ class Lisbeth_KeyGenerator {
 	private static $cacheSpaceId = 0;
 
 	/**
+	 * Should be used as singleton to keep the "cache space" (aka
+	 * "namespace prefix") the same for the whole request and only
+	 * having to set it once.
+	 *
 	 * @return Lisbeth_KeyGenerator
 	 */
-	public static function getInstance() {
+	public static function getSingleton() {
 		return Lisbeth_ObjectPool::get(
 			'Lisbeth_KeyGenerator',
 			self::$cacheSpaceId
