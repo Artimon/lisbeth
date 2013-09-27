@@ -30,9 +30,9 @@ Lisbeth_KeyGenerator::setCacheSpace('my_database');
 
 $employee = Employee::getInstance(1);	// Get employee with id 1.
 
-echo $employee->value('name');	// Echo his name.
+echo $employee->get('name');	// Echo his name.
 
 $employee
-	->setValue('name', 'Davy Jones')	// Refers "name" field in database.
-	->setValue('age', 200)	// Refers "age" field in database.
+	->set('name', 'Davy Jones')	// Refers "name" field in database.
+	->set('age', 200)	// Refers "age" field in database.
 	->update();	// Updates only what has really changed.
