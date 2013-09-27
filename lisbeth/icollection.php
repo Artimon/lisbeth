@@ -8,7 +8,7 @@ interface Lisbeth_ICollection {
 
 	/**
 	 * @param int $id
-	 * @return Lisbeth_Distributor
+	 * @return Lisbeth_ICollection
 	 */
 	public static function getInstance($id);
 

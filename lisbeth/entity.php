@@ -239,13 +239,6 @@ abstract class Lisbeth_Entity
 	}
 
 	/**
-	 * @deprecated Use self::data() instead.
-	 */
-	public function getData() {
-		return $this->data;
-	}
-
-	/**
 	 * Return plain data of the entity.
 	 *
 	 * @return array

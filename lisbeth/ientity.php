@@ -8,6 +8,19 @@ interface Lisbeth_IEntity {
 	public function __construct($id, $load = true);
 
 	/**
+	 * @param int $id
+	 * @return Lisbeth_IEntity
+	 */
+	public static function getInstance($id);
+
+	/**
+	 * Initialize data entity.
+	 *
+	 * @param int $id
+	 */
+	public function init($id);
+
+	/**
 	 * Creates a blank entity, to load by other criteria for example.
 	 *
 	 * Example:
@@ -50,6 +63,33 @@ interface Lisbeth_IEntity {
 	public function load($force = false);
 
 	/**
+	 * @return int
+	 */
+	public function id();
+
+	/**
+	 * @return string
+	 */
+	public function cacheKey();
+
+	/**
+	 * @return Lisbeth_Database
+	 */
+	public function database();
+
+	/**
+	 * @return Lisbeth_Memcache
+	 */
+	public function memcache();
+
+	public function clearCache();
+
+	/**
+	 * @return Lisbeth_KeyGenerator
+	 */
+	public function keyGenerator();
+
+	/**
 	 * Updates all changed data.
 	 *
 	 * @return	bool	true if updated
@@ -67,11 +107,6 @@ interface Lisbeth_IEntity {
 	 * @return bool true on valid state
 	 */
 	public function valid();
-
-	/**
-	 * @deprecated Use self::data() instead.
-	 */
-	public function getData();
 
 	/**
 	 * Return plain data of the entity.

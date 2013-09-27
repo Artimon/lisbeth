@@ -127,7 +127,7 @@ class Lisbeth_EntityTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$this->assertTrue(
-			is_array($this->sut->getData())
+			is_array($this->sut->data())
 		);
 
 
@@ -177,7 +177,7 @@ class Lisbeth_EntityTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$this->assertEmpty(
-			$this->sut->getData()
+			$this->sut->data()
 		);
 
 		$this->sut->get('test');
