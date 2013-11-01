@@ -5,6 +5,16 @@
 
 /******************************************************************
  * Using Lisbeth
+ *
+ * 1. Setup and entities.
+ * 2. Entity collections.
+ * 3. Entity generator.
+ *****************************************************************/
+
+
+
+/******************************************************************
+ * 1. Setup and entities.
  *****************************************************************/
 
 // Getting started with Lisbeth is really simple.
@@ -17,7 +27,7 @@ require_once './ext/lisbeth/bootstrap.php';
 
 class Employee extends Lisbeth_Entity {
 	protected $table = 'employees';
-	protected $primary = 'id';
+	protected $primary = 'id'; // Can be left out, since "id" is the default setting.
 }
 
 // That's it, your fully functional entity is ready to use.
@@ -28,11 +38,56 @@ class Employee extends Lisbeth_Entity {
 Lisbeth_KeyGenerator::setCacheSpace('my_database');
 
 
-$employee = Employee::getInstance(1);	// Get employee with id 1.
+$employee = Employee::getInstance(1); // Get employee with id 1.
+$employee = Lisbeth_ObjectPool::get('Employee', 1); // You may also use the object pool to reuse objects.
 
 echo $employee->get('name');	// Echo his name.
 
 $employee
-	->set('name', 'Davy Jones')	// Refers "name" field in database.
-	->set('age', 200)	// Refers "age" field in database.
-	->update();	// Updates only what has really changed.
+	->set('name', 'Davy Jones') // Refers "name" field in database.
+	->set('age', 200) // Refers "age" field in database.
+	->increment('counter', 5) // Increments "counter" field in database by given value.
+	->decrement('counter', 5) // Decrements "counter" field in database by given value.
+	->update(); // Updates only what has really changed.
+
+
+
+/******************************************************************
+ * 2. Entity collections.
+ *****************************************************************/
+
+// In addition you may define entity collections/groups.
+
+class Workstation extends Lisbeth_Entity {
+	protected $table = 'workstations';
+}
+
+class Workstations extends Lisbeth_Collection {
+	protected $table = 'workstations';
+	protected $group = 'employeeId';
+	protected $order = 'id';
+	protected $entityName = 'Workstation';
+}
+
+// That's it, you fully functional collection is ready to use.
+
+$workstations = Lisbeth_ObjectPool::get('Workstations', $employee->id()); // Get the workstations of the employee.
+$workstationList = $workstations->entities(); // Get an array of Workstation entities for the employee.
+
+
+
+/******************************************************************
+ * 3. Entity generator.
+ *****************************************************************/
+
+You may also use lisbeth/generate/index.html to generate entities right from your database.
+So your Employee class may look like:
+
+class Employee extends Lisbeth_Entity_Employee {
+	protected $table = 'employees';
+}
+
+// That's it, your class know has all getter/setter methods.
+
+$employee->name('Elisabeth Swan'); // Set the new employee name.
+$employee->name(); // Get the current employee name.
