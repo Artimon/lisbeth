@@ -70,6 +70,7 @@ class Generate {
 	 * @return string
 	 */
 	protected function createMethods($entityName, $table) {
+		$config = array();
 		$properties = array();
 		$methods = array();
 
@@ -77,6 +78,7 @@ class Generate {
 		$structure = $this->database->fetchAll();
 		$this->database->freeResult();
 
+		$config[] = "protected \$table = '{$table}';";
 
 		foreach ($structure as $data) {
 			$field = $this->camelCase(
@@ -86,6 +88,11 @@ class Generate {
 			$type = $this->type(
 				$data['Type']
 			);
+
+			if ($data['Key'] === 'PRI') {
+				$config[] = "
+	protected \$primary = '{$field}';";
+			}
 
 			$properties[] = "
 	/**
@@ -109,7 +116,10 @@ class Generate {
 	}";
 		}
 
-		return implode("\n", $properties) . "\n" . implode("\n", $methods);
+		return
+			implode('', $config) . "\n" .
+			implode("\n", $properties) . "\n" .
+			implode("\n", $methods);
 	}
 
 	/**

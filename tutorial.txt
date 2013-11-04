@@ -83,11 +83,11 @@ $workstationList = $workstations->entities(); // Get an array of Workstation ent
 You may also use lisbeth/generate/index.html to generate entities right from your database.
 So your Employee class may look like:
 
-class Employee extends Lisbeth_Entity_Employee {
-	protected $table = 'employees';
+class Employee extends Lisbeth_Entity_Employees {
+	// No configuration necessary at all, just start writing your business logic!
 }
 
-// That's it, your class know has all getter/setter methods.
+// That's it, your class now has all hybrid getter/setter methods.
 
 $employee->name('Elisabeth Swan'); // Set the new employee name.
 $employee->name(); // Get the current employee name.
