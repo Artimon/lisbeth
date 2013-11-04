@@ -98,7 +98,7 @@ class Generate {
 	/**
 	 * @var {$type}
 	 */
-	private \${$field};";
+	protected \${$field};";
 
 			$methods[] = "
 	/**
