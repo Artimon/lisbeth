@@ -51,6 +51,8 @@ class Generate {
 	 * @return string
 	 */
 	protected function camelCase($name, $upperCamelCase = false) {
+		$name = preg_replace('/[^a-zA-Z0-9]/', '', $name);
+
 		$parts = explode('_', $name);
 		foreach ($parts as &$part) {
 			$part = ucfirst($part);
@@ -91,7 +93,7 @@ class Generate {
 
 			if ($data['Key'] === 'PRI') {
 				$config[] = "
-	protected \$primary = '{$field}';";
+	protected \$primary = '{$data['Field']}';";
 			}
 
 			$properties[] = "
