@@ -74,6 +74,7 @@ class Generate {
 	protected function createMethods($entityName, $table) {
 		$properties = array();
 		$methods = array();
+		$fields = array();
 
 		$this->database->query('DESCRIBE ' . $table);
 		$structure = $this->database->fetchAll();
@@ -95,9 +96,11 @@ class Generate {
 	protected \$primary = '{$data['Field']}';";
 			}
 
+			$fields[] = "'{$data['Field']}'";
+
 			$methods[] = "
 	/**
-	 * @param {$type}|null
+	 * @param {$type}|null \$value
 	 * @return {$type}|{$entityName}
 	 */
 	public function {$field}(\$value = null) {
@@ -110,6 +113,28 @@ class Generate {
 		return \$this;
 	}";
 		}
+
+		$fields = implode(',', $fields);
+		$properties[] = "
+	protected static \$fields = array({$fields});";
+
+		$methods[] = "
+	/**
+	 * @param array \$parameters
+	 * @return {$entityName}
+	 * @throws InvalidArgumentException
+	 */
+	public static function create(array \$parameters) {
+		\$fields = array_keys(\$parameters);
+		foreach (\$fields as \$field) {
+			if (!in_array(\$field, self::\$fields)) {
+				\$message = \"Unknown field '{\$field}' for entity {$entityName}.\";
+				throw new InvalidArgumentException(\$message);
+			}
+		}
+
+		return parent::create(\$parameters);
+	}";
 
 		return
 			implode('', $properties) . "\n" .

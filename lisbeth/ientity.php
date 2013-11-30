@@ -90,6 +90,12 @@ interface Lisbeth_IEntity {
 	public function keyGenerator();
 
 	/**
+	 * @param array $parameters
+	 * @return Lisbeth_IEntity
+	 */
+	public static function create(array $parameters);
+
+	/**
 	 * Updates all changed data.
 	 *
 	 * @return	bool	true if updated

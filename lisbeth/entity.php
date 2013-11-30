@@ -107,6 +107,13 @@ abstract class Lisbeth_Entity
 	}
 
 	/**
+	 * @return string
+	 */
+	public function table() {
+		return $this->table;
+	}
+
+	/**
 	 * No reference, should be a copy within the entity.
 	 *
 	 * @param null|array $data
@@ -165,6 +172,32 @@ abstract class Lisbeth_Entity
 	 */
 	private function validate() {
 		$this->valid = is_array($this->data);
+	}
+
+	/**
+	 * @param array $parameters
+	 * @return Lisbeth_IEntity|static
+	 */
+	public static function create(array $parameters) {
+		$create = array();
+		$entity = static::blank();
+		$database = $entity->database();
+
+		foreach ($parameters as $key => $value) {
+			$key = $database->sanitize($key);
+			$value = $entity->quote($value);
+
+			$create[] = "`{$key}` = {$value}";
+		}
+
+		$sql = "
+			INSERT INTO `{$entity->table}`
+			SET
+				" . implode(',', $create) . ';';
+
+		$database->query($sql)->freeResult();
+
+		return new static($database->insertId());
 	}
 
 	/**
