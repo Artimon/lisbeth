@@ -105,6 +105,15 @@ class Lisbeth_Database {
 		return $this;
 	}
 
+	public function optimizeTables() {
+		$tables = $this->query('SHOW TABLES;')->fetchColumn();
+		$this->freeResult();
+
+		foreach ($tables as $table) {
+			$this->query("OPTIMIZE TABLE `{$table}`;")->freeResult();
+		}
+	}
+
 	/**
 	 * Adds inserted data to given entity collection.
 	 *
@@ -191,6 +200,8 @@ class Lisbeth_Database {
 			$result[] = $data;
 		}
 
+		$this->freeResult();
+
 		return $result;
 	}
 
@@ -206,6 +217,8 @@ class Lisbeth_Database {
 			$result[] = current($data);
 		}
 
+		$this->freeResult();
+
 		return $result;
 	}
 
@@ -216,6 +229,8 @@ class Lisbeth_Database {
 	 */
 	public function fetchOne() {
 		$data = $this->fetch();
+
+		$this->freeResult();
 
 		return $data ? current($data) : null;
 	}
