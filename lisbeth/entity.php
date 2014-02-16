@@ -197,7 +197,10 @@ abstract class Lisbeth_Entity
 
 		$database->query($sql)->freeResult();
 
-		return new static($database->insertId());
+		return Lisbeth_ObjectPool::get(
+			get_called_class(),
+			$database->insertId()
+		);
 	}
 
 	/**
