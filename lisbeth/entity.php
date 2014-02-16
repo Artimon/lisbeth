@@ -93,7 +93,10 @@ abstract class Lisbeth_Entity
 		$database->freeResult();
 
 		if ($result) {
-			return new static($result['primary']);
+			return Lisbeth_ObjectPool::get(
+				get_called_class(),
+				$result['primary']
+			);
 		}
 
 		return $this;
