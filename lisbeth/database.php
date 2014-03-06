@@ -267,12 +267,17 @@ class Lisbeth_Database {
 	}
 
 	/**
+	 * Important:
+	 * Big integers are always of type (double) and will be
+	 * string-converted to E+x numbers.
+	 * Thus using number format generates a valid floating point number.
+	 *
 	 * @param float|int|string $value
 	 * @return float|string
 	 */
 	public function sanitize($value) {
 		return is_numeric($value)
-			? (float)$value
+			? number_format((float)$value, 10, '.', '')
 			: $this->escape($value);
 	}
 }
