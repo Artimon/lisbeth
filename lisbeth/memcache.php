@@ -27,9 +27,7 @@ class Lisbeth_Memcache {
 	}
 
 	public function __destruct() {
-		if ($this->isConnected()) {
-			$this->memcache()->close();
-		}
+		$this->disconnect();
 	}
 
 	/**
@@ -51,6 +49,14 @@ class Lisbeth_Memcache {
 		}
 
 		return $this->isConnected();
+	}
+
+	public function disconnect() {
+		if ($this->isConnected()) {
+			self::$connected = false;
+
+			$this->memcache()->close();
+		}
 	}
 
 	/**
