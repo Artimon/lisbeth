@@ -41,7 +41,7 @@ class Lisbeth_Statement {
 
 		foreach ($parameters as $key => $value) {
 			$search[] = ':' . $key;
-			$replace[] = $this->database->sanitize($value);
+			$replace[] = "'{$this->database->sanitize($value)}'";
 		}
 
 		$this->sql = str_replace($search, $replace, $sql);
